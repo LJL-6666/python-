@@ -1,3 +1,6 @@
+import os
+os.getcwd()
+os.chdir("G://CDO//杂玩")
 import requests
 from pyquery import PyQuery as pq
 import re
