@@ -1,0 +1,56 @@
+---
+title: "抓取拉勾网招聘信息"
+author: "刘嘉玲"
+date: "2020/5/23"
+output: html_document
+---
+
+```{r}
+library(stringr)
+library(xml2)
+library(rvest)
+```
+
+
+```{r}
+i<-1:30 #设定抓取页数
+lagou_data<-data.frame()#创建数据框存储数据
+
+#写个循环，对固定网页结构重复抓取
+for (i in 1:30){
+  web <- read_html(str_c("https://www.lagou.com/zhaopin/shujufenxi/",i),encoding="UTF-8")
+#read_html函数解析网页并规定编码str_c函数对页数循环
+  job <- web%>%html_nodes("h2")%>%html_text()     #"h2"即为Selectorgadget定位节点信息
+  job[16] <- NA
+  job <- job[!is.na(job)]#将多余信息设置为NA并剔除
+#以此类推，抓取岗位其他信息
+  company<-web%>%html_nodes(".company_name a")%>%html_text()
+  inf1<-web%>%html_nodes(".p_bot .li_b_l")%>%html_text()
+  inf2<-web%>%html_nodes(".industry")%>%html_text()
+  temptation<-web%>%html_nodes(".li_b_r")%>%html_text()
+  job_inf<-data.frame(job,company,inf1,inf2,temptation)
+  lagou_data<-rbind(lagou_data,job_inf)
+}
+```
+
+
+```{r}
+write.csv(job_inf,file="G:/CDO/数据存储和获取/R爬拉勾网数据/job_inf.csv")   #写入数据
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
